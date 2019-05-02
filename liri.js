@@ -1,1 +1,5 @@
-var axios = require("axios")
+// var axios = require("axios")
+require("dotenv").config();
+
+var keys = require("./keys.js");
+// var spotify = new Spotify(keys.spotify);

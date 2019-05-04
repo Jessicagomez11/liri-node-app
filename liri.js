@@ -10,6 +10,8 @@ var spotify = new Spotify(keys.spotify);
 var userCommand = process.argv[2]
 var userRequest = process.argv.slice(3).join('+')
 
+//************************************************************************************************* 
+
 function spotifyCall(){
  
 spotify.search({ type: 'track', query: userRequest }, function(err, data) {
@@ -32,12 +34,12 @@ spotify.search({ type: 'track', query: userRequest }, function(err, data) {
 //************************************************************************************************* 
 
 function bandsInTownCall(){ 
- var changeCity = 0
+ var cityIndex = 0
     axios.get('https://rest.bandsintown.com/artists/' +  userRequest + '/events?app_id=codingbootcamp')
     .then(function (response) {
         console.log('__________________________________________________________________________________') 
 
-        console.log(userRequest.split("+").join(' ') + " will be in "+ response.data[changeCity].venue.city +" on " + moment(response.data[changeCity].datetime).format('LLLL')+" at the "+ response.data[changeCity].venue.name+".")
+        console.log(userRequest.split("+").join(' ') + " will be in "+ response.data[cityIndex].venue.city +" on " + moment(response.data[cityIndex].datetime).format('LLLL')+" at the "+ response.data[cityIndex].venue.name+".")
         console.log('__________________________________________________________________________________') 
 
         // console.log(response.data);
@@ -50,7 +52,32 @@ function bandsInTownCall(){
     });
 }
 
+
+
 //************************************************************************************************* 
+
+function omdbCall(){
+
+    axios.get('http://www.omdbapi.com/?apikey=trilogy&t='+ userRequest)
+    .then(function (response){
+        console.log('__________________________________________________________________________________') 
+    // console.log("hello")
+        console.log("Movie Title: "+response.data.Title)
+        console.log("Year released: "+response.data.Year)
+        console.log("Rated: "+response.data.Rated)
+        console.log("Rated: "+response.data.Genre)
+        console.log("IMDB Rating: "+response.data.imdbRating)
+        console.log("Rotten Tomatoes rating: "+response.data.Ratings[1].Value)
+        console.log("Country of origin:  "+response.data.Country)
+        console.log("Language:  "+response.data.Language)
+        console.log("Plot: "+response.data.Plot)
+        console.log("Actors: "+response.data.Actors)
+        console.log('__________________________________________________________________________________') 
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
+}
 
 
 if (userCommand === "spotify-this-song"){
@@ -62,6 +89,7 @@ if (userCommand === "spotify-this-song"){
     bandsInTownCall()
     
 }else if (userCommand === "movie-this"){
+    omdbCall()
 
 }else if (userCommand === "do-what-it-says"){
 

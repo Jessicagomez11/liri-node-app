@@ -13,9 +13,9 @@ var userRequest = process.argv.slice(3).join('+')
 
 //************************************************************************************************* 
 
-function spotifyCall() {
+function spotifyCall(songName) {
 
-    if (userRequest === "") {
+    if (songName === "") {
 
         function noSongRequested() {
             spotify.search({ type: 'track', query: 'The Sign' }, function (err, data) {
@@ -41,16 +41,16 @@ function spotifyCall() {
 
     } else {
 
-        function songRequested() {
+        function songRequested(songName) {
 
-            spotify.search({ type: 'track', query: userRequest }, function (err, data) {
+            spotify.search({ type: 'track', query: songName }, function (err, data) {
                 if (err) {
                     return console.log('Error occurred: ' + err);
                 } else {
                     console.log('__________________________________________________________________________________')
 
                     console.log('Here are your results: ')
-                    console.log("Song title: " + userRequest.split('+').join(' '))
+                    console.log("Song title: " + songName.split('+').join(' '))
                     console.log("Artist: " + data.tracks.items[0].album.artists[0].name);
                     console.log("Album title: " + data.tracks.items[0].album.name);
                     console.log("Listen on Spotify: " + data.tracks.items[0].album.artists[0].external_urls.spotify);
@@ -61,7 +61,7 @@ function spotifyCall() {
 
         }
 
-        songRequested()
+        songRequested(songName)
     }
 
 }
@@ -145,10 +145,50 @@ function omdbCall() {
     }
 }
 
+//************************************************************************************************* 
+
+function doIt(){
+
+
+    fileSystem.readFile("random.txt", "utf8", function(error, data) {
+
+      
+        if (error) {
+          return console.log(error);
+        }
+      
+     
+        console.log(data);
+      
+       
+        var dataArr = data.split(",");
+        
+        if (dataArr[0]=== "spotify-this-song" ){
+            
+            console.log(dataArr[1])
+            var songName= dataArr[1]
+            
+            spotifyCall(songName)
+        } else if ( dataArr[0] === "concert-this"){
+
+
+        }
+
+      
+      });
+      
+
+}
+
+
+
+
+//************************************************************************************************* 
+
 
 if (userCommand === "spotify-this-song") {
 
-    spotifyCall()
+    spotifyCall(userRequest)
 
 } else if (userCommand === "concert-this") {
 
@@ -160,4 +200,5 @@ if (userCommand === "spotify-this-song") {
 
 } else if (userCommand === "do-what-it-says") {
 
+    doIt()
 }
